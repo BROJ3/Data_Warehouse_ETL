@@ -91,34 +91,17 @@ psql -f warehouse_creation.ddl
 
 ---
 
-- **ETL Pipeline Diagram** 
-High-level overview of data flow from operational schema → staging → warehouse.
-![ETL Pipeline](images/ETLProcess.png)
-
-## :building_construction: Operational Schema
-
-![Operational Schema](images/zagimore.png)
-
---
-
-## :rocket: Staging Schema
-
-![Staging Area](images/staging.png)
-
----
-
-## :warehouse: Warehouse Schema
-
-![Data Warehouse](images/warehouse.png)
-
----
-
 <details>
   <summary>🔍 Show ETL & Schema Diagrams</summary>
 
   <p align="center">
     [<img src="images/ETLProcess.png" alt="ETL Pipeline" width="300"/>](images/ETLProcess.png)<br/>
     <em>Figure 1. ETL Pipeline Diagram</em>
+  </p>
+
+  <p align="center">
+    <img src="images/zagimore.png" alt="Staging Schema" width="300"/><br/>
+    <em>Figure 2. Staging Environment Schema</em>
   </p>
 
   <p align="center">
@@ -136,17 +119,18 @@ High-level overview of data flow from operational schema → staging → warehou
   <p align="center">
     [<img src="images/procedure_flow.png" alt="DailyStoreRefresh Workflow" width="300"/>](images/procedure_flow.png)<br/>
     <em>Figure 4. DailyStoreRefresh Stored Procedure Workflow</em>
-  </p>
-
-</details>
-
-
-```sql
+    ```sql
 CREATE TABLE Customer_Dimension (
   CustomerKey INT PRIMARY KEY,
   CName VARCHAR(15) NOT NULL
 );
 ```
+  </p>
+
+</details>
+
+
+
 
 ---
 
