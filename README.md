@@ -91,24 +91,32 @@ psql -f warehouse_creation.ddl
 
 ---
 
-## :bulb: Suggested Images
+- **ETL Pipeline Diagram** 
+High-level overview of data flow from operational schema → staging → warehouse.
+![ETL Pipeline](images/ETLProcess.png)
 
-To enhance this README, consider adding the following visuals in an `images/` directory:
+## :building_construction: Operational Schema
 
-- **ETL Pipeline Diagram** (`images/etl_pipeline.png`): High-level overview of data flow from operational schema → staging → warehouse.
-- **ER Diagram** (`images/warehouse.png`): Entity-Relationship model of the warehouse schema.
-- **Stored Procedure Workflow** (`images/procedure_flow.png`): Flowchart of how `DailyStoreRefresh` updates dimensions.
+![Operational Schema](images/zagimore.png)
 
-Each image helps readers quickly grasp the architecture and key components of your ETL solution.
+--
+
+## :rocket: Staging Schema
+
+![Staging Area](images/staging.png)
+
+---
+
+## :warehouse: Warehouse Schema
+
+![Data Warehouse](images/warehouse.png)
+
+---
+
+
 
 ---
 
 ## :handshake: Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to open a pull request.
-
----
-
-## :memo: License
-
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
