@@ -1,92 +1,114 @@
-Data Warehouse ETL Project
-This repository contains the SQL and Python code used to create, populate, and update a data warehouse using PostgreSQL (with Supabase). The project demonstrates a complete ETL (Extract, Transform, Load) process from an operational schema and staging environment into a fully structured data warehouse.
+# Data Warehouse ETL Project
 
-Overview
-The repository includes several SQL DDL scripts that:
+This repository demonstrates a complete ETL (Extract, Transform, Load) workflow using SQL DDL scripts and Python orchestration code. It moves data from an operational schema into a staging area and finally into a structured data warehouse.
 
-Create schemas for operational data (e.g., zagimore), data staging, and the data warehouse.
+---
 
-Populate staging tables with raw data.
+## :file_folder: File Structure
 
-Transform and load data from staging into dimension tables and fact tables in the data warehouse.
+- **`zagimore.ddl`**  
+  Defines the operational schema (e.g., `vendor`, `product`, `customer`, `store`) for raw data ingestion.
 
-Populate specific dimensions (such as the Calendar dimension) and fact tables (e.g., Revenue and Unit Sold).
+- **`staging_full.ddl`**  
+  Sets up the staging environment tables in which raw data is cleansed and pre-processed before loading into the warehouse.
 
-A Python script is also provided to automate the execution of these SQL scripts, making it easier to update your data warehouse when new data is available.
+- **`snapshotsaggregates.ddl`**  
+  Builds snapshot and aggregate tables (e.g., `productCategoryDimension`) for summarizing data across time.
 
-Directory Structure
-zagimore.ddl
-Contains DDL commands to create the operational schema and tables for the primary data source.
+- **`procedures.ddl`**  
+  Contains stored procedures (e.g., `DailyStoreRefresh`) to automate incremental updates of dimension and fact tables.
 
-datastaging.ddl
-Contains DDL commands to set up the staging environment, where raw data is loaded and pre-processed.
+- **`etlcode.ddl`**  
+  Implements the extract step, creating an `IntermediateFactTable` to consolidate sales metrics from the operational schema.
 
-ds_populating.ddl
-Contains SQL queries that populate the data staging tables.
+- **`warehouse_creation.ddl`**  
+  Creates the final data warehouse schema, including dimension tables (`Customer_Dimension`, `Store_Dimension`, `Calendar_Dimension`, etc.) and fact tables (`Revenue`, `UnitsSold`).
 
-calendar_populate.ddl
-Contains SQL code specifically for populating the Calendar dimension.
+- **`sliteapproach.py`**  
+  Python script using `sqlite3` to orchestrate the ETL process: executes DDL scripts, populates the calendar dimension in Python, and loads staging and warehouse databases.
 
-datawarehouse.ddl
-Contains DDL commands to create the data warehouse schema and its tables.
+- **`pymyapproach.py`**  
+  Python script using `pymysql` for MySQL: automates database creation, executes DDL files, handles calendar population (via SQL or Python fallback), and refreshes staging and warehouse schemas.
 
-dw_populating.ddl
-Contains SQL queries to load dimension and fact tables in the data warehouse from the staging environment.
+---
 
-zagi_populating.ddl
-Contains additional SQL scripts for populating the operational schema (if applicable).
+## :rocket: Getting Started
 
-python_script.py (or similar)
-A Python script that automates the running of these SQL queries using the psycopg2 library.
+### Prerequisites
 
-ETL Process
-The ETL process in this project consists of the following steps:
+- **Python 3.x**  
+- **SQLite3** or **MySQL** server  
+- If using MySQL, install dependencies:  
+  ```bash
+  pip install pymysql
+  ```
 
-Extract & Transform (Data Staging):
+### Running the ETL (SQLite)
 
-Raw data is loaded into the operational schema.
+1. Ensure you have Python 3 and `sqlite3` available.  
+2. From the project root:
+   ```bash
+   python sliteapproach.py
+   ```
+3. This will create three databases:
+   - `crnjakt_zagimore.db` (operational)
+   - `crnjakt_datastaging_zagimore.db` (staging)
+   - `crnjakt_warehouse_zagimore.db` (data warehouse)
 
-Data is then transformed and loaded into the staging environment (using scripts in ds_populating.ddl and zagi_populating.ddl).
+### Running the ETL (MySQL)
 
-A temporary table (e.g., IntermediateFact) is created in the staging area to consolidate fact data.
+1. Update your MySQL credentials in `pymyapproach.py` under the `db_config` dictionary.  
+2. Run:
+   ```bash
+   python pymyapproach.py
+   ```
+3. The script will create and populate the corresponding MySQL databases:
+   - `crnjakt_zagimore`
+   - `crnjakt_datastaging_zagimore`
+   - `crnjakt_warehouse_zagimore`
 
-Load (Data Warehouse):
+### Manual SQL Execution
 
-Dimension tables are populated in the data warehouse by selecting and transforming data from staging (see dw_populating.ddl).
+If you prefer manual control, execute the DDL scripts in the following order against your database server:
 
-Fact tables are then loaded with detailed metrics like revenue and units sold.
+```bash
+-- 1. Operational schema
+psql -f zagimore.ddl
 
-Automation:
+-- 2. Staging schema
+psql -f staging_full.ddl
+psql -f snapshotsaggregates.ddl
+psql -f procedures.ddl
 
-The provided Python script automates the execution of these queries, making it simple to refresh or update the data warehouse when new data becomes available.
+-- 3. ETL extract
+psql -f etlcode.ddl
 
-How to Use
-Database Setup:
+-- 4. Warehouse schema
+psql -f warehouse_creation.ddl
+```
 
-Run the DDL scripts in the following order:
+*(Replace `psql` with `mysql` or your client of choice.)*
 
-zagimore.ddl – Sets up the operational schema.
+---
 
-datastaging.ddl – Creates the staging schema and tables.
+## :bulb: Suggested Images
 
-datawarehouse.ddl – Creates the data warehouse schema and tables.
+To enhance this README, consider adding the following visuals in an `images/` directory:
 
-Populate Staging Data:
+- **ETL Pipeline Diagram** (`images/etl_pipeline.png`): High-level overview of data flow from operational schema → staging → warehouse.
+- **ER Diagram** (`images/warehouse.png`): Entity-Relationship model of the warehouse schema.
+- **Stored Procedure Workflow** (`images/procedure_flow.png`): Flowchart of how `DailyStoreRefresh` updates dimensions.
 
-Execute the scripts in ds_populating.ddl, zagi_populating.ddl, and calendar_populate.ddl to load and transform your raw data into the staging environment.After calendar_populate, the created function needs to be called
+Each image helps readers quickly grasp the architecture and key components of your ETL solution.
 
-Load Data Warehouse:
+---
 
-Run the queries in dw_populating.ddl to load dimension and fact tables in the data warehouse from the staging tables.
+## :handshake: Contributing
 
-Incremental Updates:
+Contributions, issues, and feature requests are welcome! Feel free to open a pull request.
 
-When new data is available, decide if you need a full refresh (e.g., using TRUNCATE before re-inserting) or an incremental update (using upsert logic) and adjust the scripts accordingly.
+---
 
+## :memo: License
 
-Make sure that join conditions in the ETL queries are correct to avoid duplicate rows.
-
-The repository is designed for educational purposes and can be modified to suit more complex ETL requirements.
-
-Conclusion
-This project demonstrates how to design, populate, and update a data warehouse using MySQL, PostgreSQL, and python. The modular design allows for flexibility in managing and refreshing your data. Contributions and improvements are welcome!
+Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
