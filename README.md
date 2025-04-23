@@ -114,6 +114,24 @@ High-level overview of data flow from operational schema → staging → warehou
 ---
 
 
+```sql
+CREATE TABLE Customer_Dimension (
+  CustomerKey INT PRIMARY KEY,
+  CName VARCHAR(15) NOT NULL
+);
+```
+
+---
+
+### 5. Collapsible “Details” sections  
+
+<details>
+<summary>🔍 Manual SQL Execution</summary>
+
+```bash
+psql -f zagimore.ddl
+psql -f staging_full.ddl
+...
 
 ---
 
