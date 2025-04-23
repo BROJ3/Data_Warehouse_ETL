@@ -95,7 +95,7 @@ psql -f warehouse_creation.ddl
   <summary>🔍 Show ETL & Schema Diagrams</summary>
 
   <p align="center">
-    [<img src="images/ETLProcess.png" alt="ETL Pipeline" width="300"/><br/>
+    <img src="images/ETLProcess.png" alt="ETL Pipeline" width="300"/><br/>
     <em>Figure 1. ETL Pipeline Diagram</em>
   </p>
 
@@ -117,15 +117,29 @@ psql -f warehouse_creation.ddl
   <hr/>
 
   <p align="center">
-    [<img src="images/procedure_flow.png" alt="DailyStoreRefresh Workflow" width="300"/>](images/procedure_flow.png)<br/>
+    <img src="images/procedure_flow.png" alt="DailyStoreRefresh Workflow" width="300"/><br/>
     <em>Figure 4. DailyStoreRefresh Stored Procedure Workflow</em>
   </p>
 
 ```sql
-CREATE TABLE Customer_Dimension (
-  CustomerKey INT PRIMARY KEY,
-  CName VARCHAR(15) NOT NULL
-);
+CREATE procedure DailyStoreRefresh()
+BEGIN
+
+INSERT INTO Store_Dimension(StoreId,StoreZip,RegioniD,RegionName,ExtractionTimestamp, PDLoaded, DVF,DVU, CurrentStatus)
+SELECT s.storeid, s.storezip, r.regionid, r.regionname,NOW(),False, NOW(), '2040-01-01','C'
+FROM crnjakt_zagimore.store s, crnjakt_zagimore.region r
+WHERE s.regionid = r.regionid
+AND s.StoreId not in (SELECT StoreId FROM crnjakt_zagimore_ds.Store_Dimension);
+
+INSERT INTO crnjakt_zagimore_dw.Store_Dimension (StoreKey, StoreId,StoreZip,RegioniD,RegionName, DVF,DVU, CurrentStatus)
+SELECT StoreKey, StoreId,StoreZip,RegioniD,RegionName,DVF,DVU, CurrentStatus
+from Store_Dimension
+WHERE PDLoaded=False;
+
+UPDATE Store_Dimension
+SET PDLoaded=True;
+END
+
 ```
 </details>
 
