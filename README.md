@@ -113,6 +113,33 @@ High-level overview of data flow from operational schema → staging → warehou
 
 ---
 
+<details>
+  <summary>🔍 Show ETL & Schema Diagrams</summary>
+
+  <p align="center">
+    [<img src="images/ETLProcess.png" alt="ETL Pipeline" width="300"/>](images/ETLProcess.png)<br/>
+    <em>Figure 1. ETL Pipeline Diagram</em>
+  </p>
+
+  <p align="center">
+    <img src="images/staging.png" alt="Staging Schema" width="300"/><br/>
+    <em>Figure 2. Staging Environment Schema</em>
+  </p>
+
+  <p align="center">
+    <img src="images/warehouse.png" alt="Data Warehouse Schema" width="300"/><br/>
+    <em>Figure 3. Data Warehouse Schema</em>
+  </p>
+
+  <hr/>
+
+  <p align="center">
+    [<img src="images/procedure_flow.png" alt="DailyStoreRefresh Workflow" width="300"/>](images/procedure_flow.png)<br/>
+    <em>Figure 4. DailyStoreRefresh Stored Procedure Workflow</em>
+  </p>
+
+</details>
+
 
 ```sql
 CREATE TABLE Customer_Dimension (
