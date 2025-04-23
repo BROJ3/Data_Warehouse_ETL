@@ -117,7 +117,6 @@ psql -f warehouse_creation.ddl
   <hr/>
 
   <p align="center">
-    <img src="images/procedure_flow.png" alt="DailyStoreRefresh Workflow" width="300"/><br/>
     <em>Figure 4. DailyStoreRefresh Stored Procedure Workflow</em>
   </p>
 
