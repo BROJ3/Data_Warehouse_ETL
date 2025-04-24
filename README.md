@@ -4,7 +4,7 @@ This repository demonstrates a complete ETL (Extract, Transform, Load) workflow 
 
 ---
 
-## :file_folder: File Structure
+## :file_folder: File Structure of the database
 
 - **`zagimore.ddl`**  
   Defines the operational schema (e.g., `vendor`, `product`, `customer`, `store`) for raw data ingestion.
